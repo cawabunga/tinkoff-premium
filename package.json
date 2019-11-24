@@ -1,0 +1,22 @@
+{
+  "name": "tinkoff-premium",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "$(npm bin)/serve docs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.0",
+    "pg": "^7.14.0",
+    "request": "^2.88.0",
+    "string.prototype.padstart": "^3.0.0"
+  },
+  "devDependencies": {
+    "serve": "^11.2.0"
+  }
+}
