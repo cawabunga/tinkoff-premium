@@ -1,0 +1,9 @@
+Setup `.env` file:
+```
+PGHOST=
+PGUSER=
+PGDATABASE=
+PGPASSWORD=
+PGPORT=
+SECRET_SESSION_ID=
+```
