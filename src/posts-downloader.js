@@ -18,7 +18,7 @@ const downloadCascade = async (tinkoffApi, pgClient, cursor) => {
     }
 };
 
-exports.download = downloadCascade;
+exports.downloadPosts = downloadCascade;
 
 exports.insertPost = client => async post => (
     client.query(`INSERT INTO

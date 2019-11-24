@@ -1,27 +1,15 @@
-require('dotenv').config();
-const { Client } = require('pg');
 const fs = require('fs');
 const { getPosts } = require('./posts-downloader');
 
-const pgClient = new Client();
+const exportPostsAsJSON = async (file, pgClient) => {
+    const posts = await getPosts(pgClient);
 
-new Promise(async () => {
-    try {
-        pgClient.connect();
-
-        const posts = await getPosts(pgClient);
-
-        await new Promise((resolve, reject) => {
-            const json = JSON.stringify(posts);
-            fs.writeFile(`./frontend/json/posts.json`, json, 'utf8', (err) => {
-                err ? reject(err) : resolve();
-            });
+    return await new Promise((resolve, reject) => {
+        const json = JSON.stringify(posts);
+        fs.writeFile(file, json, 'utf8', (err) => {
+            err ? reject(err) : resolve(true);
         });
+    });
+};
 
-        console.log('Done');
-        process.exit(0);
-    } catch (err) {
-        console.error(err);
-        process.exit(1);
-    }
-});
+exports.exportPostsAsJSON = exportPostsAsJSON;
