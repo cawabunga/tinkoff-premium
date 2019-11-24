@@ -6,15 +6,32 @@ export class PostComponent extends HTMLElement {
     }
 
     render() {
+        const date = new Date(this.post.date);
+        const formattedDate = formatDate(date, getBrowserLocale());
         this.innerHTML = `
-    <div style='background: url(${this.post.img_big}) no-repeat; background-size: cover; width: 300px;'>
-        <div>${this.post.title}</div>
-        <div>${this.post.body}</div>
+    <div class='post'>
+        <div class='post__hero'>
+            <img src='${this.post.img_big}' class='post__hero__image' />
+            <div class='post__hero__text'>
+                <div class='post__title'>${this.post.title}</div>
+                <div class='post__date'>${formattedDate}</div>
+            </div>
+        </div>
+        <div class='post__body'>${this.post.body}</div>
     </div>
 `;
     }
 
 }
+
+const formatDate = (date, locale) => {
+    const formatter = new Intl.DateTimeFormat(locale);
+    return formatter.format(date);
+};
+
+export const getBrowserLocale = () => (
+    navigator.language || navigator.userLanguage || null
+);
 
 customElements.define('post-component', PostComponent);
 export default 'post-component';

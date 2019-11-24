@@ -11,6 +11,8 @@ export class AppComponent extends HTMLElement {
     }
 
     async connectedCallback() {
+        this.render();
+
         window.addEventListener('scroll', this.handleScroll);
         this.renderMorePosts();
     }
@@ -19,11 +21,16 @@ export class AppComponent extends HTMLElement {
         window.removeEventListener('scroll', this.handleScroll);
     }
 
-    render(posts) {
+    render() {
+        this.innerHTML = `<div class='posts js-posts'></div>`;
+        this.postsContainer = this.querySelector('.js-posts');
+    }
+
+    renderPosts(posts, container) {
         posts.forEach((post) => {
             const postEl = document.createElement(PostComponent);
             postEl.post = post;
-            this.appendChild(postEl);
+            container.appendChild(postEl);
         });
     }
 
@@ -32,7 +39,7 @@ export class AppComponent extends HTMLElement {
         this.isBusy = true;
         const posts = await this.fetchPosts(this.limit, this.cursor);
         this.cursor += this.limit;
-        this.render(posts);
+        this.renderPosts(posts, this.postsContainer);
         this.isBusy = false;
     }
 
