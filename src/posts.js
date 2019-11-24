@@ -1,5 +1,7 @@
 
-const getPosts = (feed) => feed.payload.items;
-const fetchLatestPosts = async (api) => api.fetchFeed().then(getPosts);
+const getPosts = (feed) => [feed.payload.items, feed.payload.meta];
+const fetchLatestPosts = async (api) => fetchPosts(api, undefined);
+const fetchPosts = async (api, cursor) => api.fetchFeed(cursor).then(getPosts);
 
 exports.fetchLatestPosts = fetchLatestPosts;
+exports.fetchPosts = fetchPosts;

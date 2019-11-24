@@ -1,12 +1,26 @@
-const { fetchLatestPosts } = require('./posts');
+const { fetchPosts } = require('./posts');
 
-exports.download = async (tinkoffApi, pgClient) => {
-    const posts = await fetchLatestPosts(tinkoffApi);
-    const insertings = posts.map(insertPost(pgClient));
-    return Promise.all(insertings);
+const download = async (tinkoffApi, pgClient, cursor) => {
+    const [posts, meta] = await fetchPosts(tinkoffApi, cursor);
+    const safePosts = posts || [];
+    const insertings = safePosts.map(exports.insertPost(pgClient));
+    await Promise.all(insertings);
+    console.log(`Written ${safePosts.length} posts`);
+    return meta;
 };
 
-const insertPost = client => post => (
+const downloadCascade = async (tinkoffApi, pgClient, cursor) => {
+    if (cursor === '') {
+        return true;
+    } else {
+        const meta = await download(tinkoffApi, pgClient, cursor);
+        return downloadCascade(tinkoffApi, pgClient, meta.cursor);
+    }
+};
+
+exports.download = downloadCascade;
+
+exports.insertPost = client => async post => (
     client.query(`INSERT INTO
         posts(tinkoff_post_id, type, title, body, date, img_big)
         VALUES($1, $2, $3, $4, $5, $6)
@@ -20,3 +34,8 @@ const insertPost = client => post => (
         ]
     )
 );
+
+exports.getPosts = async client => {
+    const result = await client.query(`SELECT * from posts ORDER BY date DESC`);
+    return result.rows;
+};
