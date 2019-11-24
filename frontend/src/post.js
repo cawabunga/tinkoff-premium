@@ -1,3 +1,4 @@
+import { formatDate, getBrowserLocale } from './utils.js';
 
 export class PostComponent extends HTMLElement {
 
@@ -23,15 +24,6 @@ export class PostComponent extends HTMLElement {
     }
 
 }
-
-const formatDate = (date, locale) => {
-    const formatter = new Intl.DateTimeFormat(locale);
-    return formatter.format(date);
-};
-
-export const getBrowserLocale = () => (
-    navigator.language || navigator.userLanguage || null
-);
 
 customElements.define('post-component', PostComponent);
 export default 'post-component';

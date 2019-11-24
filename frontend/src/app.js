@@ -1,5 +1,6 @@
 import PostComponent from './post.js';
 import * as postRepository from './post-repository.js';
+import { throttle } from './utils.js';
 
 export class AppComponent extends HTMLElement {
 
@@ -7,7 +8,7 @@ export class AppComponent extends HTMLElement {
         super();
         this.cursor = 0;
         this.limit = 3;
-        this.handleScroll = this.handleScroll.bind(this);
+        this.handleScroll = throttle(this.handleScroll.bind(this), 150);
     }
 
     async connectedCallback() {
