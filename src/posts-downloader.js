@@ -20,8 +20,12 @@ const downloadCascade = async (tinkoffApi, pgClient, cursor) => {
 
 exports.downloadPosts = downloadCascade;
 
-exports.insertPost = client => async post => (
-    client.query(`INSERT INTO
+exports.insertPost = client => async post => {
+    if (post.item.id == null) {
+        return;
+    }
+
+    return client.query(`INSERT INTO
         posts(tinkoff_post_id, type, title, body, date, img_big)
         VALUES($1, $2, $3, $4, $5, $6)
         ON CONFLICT DO NOTHING`, [
@@ -33,7 +37,7 @@ exports.insertPost = client => async post => (
             post.item.img_big,
         ]
     )
-);
+};
 
 exports.getPosts = async client => {
     const result = await client.query(`SELECT * from posts ORDER BY date DESC`);
